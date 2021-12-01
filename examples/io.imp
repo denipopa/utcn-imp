@@ -23,3 +23,4 @@ func testComparison(a: int, b: int): int {
 
 
 print_int(testComparison(read_int(), read_int()))
+print_int(testModulo(read_int(), read_int()))
