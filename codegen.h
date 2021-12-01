@@ -114,10 +114,15 @@ private:
   void LowerBlockStmt(const Scope &scope, const BlockStmt &blockStmt);
   /// Lowers a while statement.
   void LowerWhileStmt(const Scope &scope, const WhileStmt &whileStmt);
+  /// Lowers a if statement
+  void LowerIfStmt(const Scope &scope, const IfStmt &ifStmt);
   /// Lowers a return statement.
   void LowerReturnStmt(const Scope &scope, const ReturnStmt &returnStmt);
   /// Lowers a standalone expression statement.
   void LowerExprStmt(const Scope &scope, const ExprStmt &exprStmt);
+
+  /// Modified
+  void LowerInteger(const IntegerExpr &expr);
 
   /// Lowers a single expression.
   void LowerExpr(const Scope &scope, const Expr &expr);
@@ -144,11 +149,29 @@ private:
   /// Push a prototype to the stack.
   void EmitPushProto(RuntimeFn fn);
   /// Push the nth value from the stack to the top.
+
+  /// Modified
+  void EmitPushInt(uint64_t index);
+
   void EmitPeek(uint32_t index);
   /// Emit a return instruction.
   void EmitReturn();
   /// Emit an add opcode.
   void EmitAdd();
+  /// Emit an subtract opcode.
+  void EmitSubtract();
+    /// Emit an multiply opcode.
+  void EmitMultiply();
+
+    /// Emit an division opcode.
+  void EmitDivide();
+
+    /// Emit an equal opcode.
+  void EmitEqual();
+
+    /// Emit an modulo opcode.
+  void EmitModulo();
+  
   /// Emit a label.
   void EmitLabel(Label label);
   /// Emit a conditional jump.

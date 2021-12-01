@@ -114,6 +114,9 @@ void Codegen::LowerStmt(const Scope &scope, const Stmt &stmt)
     case Stmt::Kind::WHILE: {
       return LowerWhileStmt(scope, static_cast<const WhileStmt &>(stmt));
     }
+    case Stmt::Kind::IF: {
+      return LowerIfStmt(scope, static_cast<const IfStmt &>(stmt));
+    }
     case Stmt::Kind::EXPR: {
       return LowerExprStmt(scope, static_cast<const ExprStmt &>(stmt));
     }
@@ -150,6 +153,23 @@ void Codegen::LowerWhileStmt(const Scope &scope, const WhileStmt &whileStmt)
   EmitLabel(exit);
 }
 
+//lab2 ex4 if statement-----------------------------------------------------------------------
+void Codegen::LowerIfStmt(const Scope &scope, const IfStmt &ifStmt) {
+  auto elseStmtLabel = MakeLabel();
+  auto end = MakeLabel();
+
+  LowerExpr(scope, ifStmt.GetCond());
+  EmitJumpFalse(elseStmtLabel);
+  LowerStmt(scope, ifStmt.GetIfStmt());
+  EmitJump(end);
+
+  EmitLabel(elseStmtLabel);
+  if (auto stmt = ifStmt.GetElseStmt()) {
+    LowerStmt(scope, *stmt);
+  }
+
+  EmitLabel(end);
+}
 // -----------------------------------------------------------------------------
 void Codegen::LowerReturnStmt(const Scope &scope, const ReturnStmt &retStmt)
 {
@@ -176,6 +196,9 @@ void Codegen::LowerExpr(const Scope &scope, const Expr &expr)
     }
     case Expr::Kind::CALL: {
       return LowerCallExpr(scope, static_cast<const CallExpr &>(expr));
+    }
+    case Expr::Kind::INTEGER: {
+      return LowerInteger(static_cast<const IntegerExpr &>(expr));
     }
   }
 }
@@ -209,7 +232,28 @@ void Codegen::LowerBinaryExpr(const Scope &scope, const BinaryExpr &binary)
     case BinaryExpr::Kind::ADD: {
       return EmitAdd();
     }
+    case BinaryExpr::Kind::SUBTRACT: {
+      return EmitSubtract();
+    }
+     case BinaryExpr::Kind::MULTIPLY: {
+      return EmitMultiply();
+    }
+     case BinaryExpr::Kind::DIVIDE: {
+      return EmitDivide();
+    }
+     case BinaryExpr::Kind::EQUAL: {
+      return EmitEqual();
+    }
+    case BinaryExpr::Kind::MODULO: {
+      return EmitModulo();
+    }
   }
+}
+
+// ----------------------------------------------------------------------------- // MODIFIED
+void Codegen::LowerInteger(const IntegerExpr &expr)
+{
+  EmitPushInt(expr.GetValue());
 }
 
 // -----------------------------------------------------------------------------
@@ -332,6 +376,14 @@ void Codegen::EmitReturn()
   Emit<unsigned>(func_ ? func_->arg_size() : 0);
 }
 
+// ----------------------------------------------------------------------------- // MODIFIED
+void Codegen::EmitPushInt(uint64_t index)
+{
+  depth_ += 1;
+  Emit<Opcode>(Opcode::PUSH_INT);
+  Emit<int64_t>(index);
+}
+
 // -----------------------------------------------------------------------------
 void Codegen::EmitAdd()
 {
@@ -340,6 +392,44 @@ void Codegen::EmitAdd()
   Emit<Opcode>(Opcode::ADD);
 }
 
+// -----------------------------------------------------------------------------
+void Codegen::EmitSubtract()
+{
+  assert(depth_ > 0 && "no elements on stack");
+  depth_ -= 1;
+  Emit<Opcode>(Opcode::SUBTRACT);
+}
+// -----------------------------------------------------------------------------
+void Codegen::EmitMultiply()
+{
+  assert(depth_ > 0 && "no elements on stack");
+  depth_ -= 1;
+  Emit<Opcode>(Opcode::MULTIPLY);
+}
+
+// -----------------------------------------------------------------------------
+void Codegen::EmitDivide()
+{
+  assert(depth_ > 0 && "no elements on stack");
+  depth_ -= 1;
+  Emit<Opcode>(Opcode::DIVIDE);
+}
+
+// -----------------------------------------------------------------------------
+void Codegen::EmitEqual()
+{
+  assert(depth_ > 0 && "no elements on stack");
+  depth_ -= 1;
+  Emit<Opcode>(Opcode::EQUAL);
+}
+
+// -----------------------------------------------------------------------------
+void Codegen::EmitModulo()
+{
+  assert(depth_ > 0 && "no elements on stack");
+  depth_ -= 1;
+  Emit<Opcode>(Opcode::MODULO);
+}
 // -----------------------------------------------------------------------------
 void Codegen::EmitJumpFalse(Label label)
 {

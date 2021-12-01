@@ -21,6 +21,7 @@ public:
   enum class Kind {
     BLOCK,
     WHILE,
+    IF,
     EXPR,
     RETURN
   };
@@ -45,6 +46,7 @@ public:
     REF,
     BINARY,
     CALL,
+    INTEGER,
   };
 
 public:
@@ -82,7 +84,12 @@ class BinaryExpr : public Expr {
 public:
   /// Enumeration of binary operators.
   enum class Kind {
-    ADD
+    ADD,
+    SUBTRACT,
+    MULTIPLY,
+    DIVIDE,
+    EQUAL,
+    MODULO
   };
 
 public:
@@ -132,6 +139,21 @@ public:
 private:
   std::shared_ptr<Expr> callee_;
   ArgList args_;
+};
+
+//MODIFIED
+class IntegerExpr : public Expr {
+public:
+  IntegerExpr(uint64_t integerValue)
+    : Expr(Kind::INTEGER)
+    , integerValue_(integerValue)
+  {
+  }
+
+  const uint64_t &GetValue() const { return integerValue_; }
+
+private:
+  uint64_t integerValue_;
 };
 
 /**
@@ -215,6 +237,36 @@ private:
   /// Expression to be executed in the loop body.
   std::shared_ptr<Stmt> stmt_;
 };
+
+/**
+* if statement if cond else smt else
+**/
+class IfStmt final : public Stmt {
+public:
+  IfStmt(std::shared_ptr<Expr> cond, std::shared_ptr<Stmt> ifStmt, std::shared_ptr<Stmt> elseStmt)
+      : Stmt(Kind::IF)
+      , cond_(cond)
+      , ifStmt_(ifStmt)
+      , elseStmt_(elseStmt)
+      , haveElse_(elseStmt != nullptr)
+  {
+  }
+
+  const Expr &GetCond() const { return *cond_; }
+  const Stmt &GetIfStmt() const { return *ifStmt_; }
+  const std::shared_ptr<Stmt> GetElseStmt() const { return elseStmt_; }
+
+private:
+  /// Condition for the loop
+  std::shared_ptr<Expr> cond_;
+  /// expr to be executed in loop
+  std::shared_ptr<Stmt> ifStmt_;
+  /// expr to be executed in loop
+  std::shared_ptr<Stmt> elseStmt_;
+  /// bool that indicates that smt else is present
+  bool haveElse_;
+};
+
 
 /**
  * Base class for internal and external function declarations.

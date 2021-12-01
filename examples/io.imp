@@ -2,8 +2,24 @@
 func print_int(a: int): int = "print_int"
 func read_int(): int = "read_int"
 
-func test(a: int, b: int): int {
+func testSubstraction(a: int, b: int): int {
+  return a - b
+}
+func testAddition(a: int, b: int): int {
   return a + b
 }
+func testMultiplication(a: int, b: int): int {
+  return a * b
+}
+func testDivision(a: int, b: int): int {
+  return a / b
+}
+func testModulo(a: int, b: int): int {
+  return a % b
+}
+func testComparison(a: int, b: int): int {
+  return a == b
+}
 
-print_int(test(read_int(), read_int()))
+
+print_int(testComparison(read_int(), read_int()))

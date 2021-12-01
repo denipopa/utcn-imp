@@ -21,6 +21,11 @@ void Interp::Run()
         Push(prog_.Read<RuntimeFn>(pc_));
         continue;
       }
+      case Opcode::PUSH_INT: {
+        auto val = prog_.Read<int64_t>(pc_);
+        Push(val);
+        continue;
+      }
       case Opcode::PEEK: {
         auto idx = prog_.Read<unsigned>(pc_);
         Push(*(stack_.rbegin() + idx));
@@ -51,7 +56,44 @@ void Interp::Run()
       case Opcode::ADD: {
         auto rhs = PopInt();
         auto lhs = PopInt();
+        /// MODIFIED
+        if(typeid(lhs) != typeid(int64_t) || typeid(rhs) != typeid(int64_t))
+        {
+          throw RuntimeError("Invalid");
+        }
         Push(lhs + rhs);
+        continue;
+      }
+      case Opcode::SUBTRACT: {
+        auto rhs = PopInt();
+        auto lhs = PopInt();
+        Push(rhs - lhs);
+        continue;
+      }
+      case Opcode::MULTIPLY: {
+        auto rhs = PopInt();
+        auto lhs = PopInt();
+        Push(rhs * lhs);
+        continue;
+      }
+         case Opcode::DIVIDE: {
+        auto rhs = PopInt();
+        auto lhs = PopInt();
+        Push(rhs / lhs);
+        continue;
+      }
+       case Opcode::EQUAL: {
+        auto rhs = PopInt();
+        auto lhs = PopInt();
+        // Push(rhs == lhs);
+      int64_t val = lhs == rhs ? 1 : 0;
+        Push(val);
+        continue;
+      }
+        case Opcode::MODULO: {
+        auto rhs = PopInt();
+        auto lhs = PopInt();
+        Push(rhs % lhs);
         continue;
       }
       case Opcode::RET: {

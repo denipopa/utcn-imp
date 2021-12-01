@@ -9,19 +9,24 @@
 #include <ostream>
 
 
-
 /**
  * Enumeration of the opcodes supported by the interpreter.
  */
 enum class Opcode : uint8_t {
   PUSH_FUNC,
   PUSH_PROTO,
+  PUSH_INT,
 
   PEEK,
   POP,
   CALL,
 
   ADD,
+  SUBTRACT,
+  MULTIPLY,
+  DIVIDE,
+  EQUAL,
+  MODULO,
   RET,
 
   JUMP_FALSE,

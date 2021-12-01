@@ -88,6 +88,8 @@ std::shared_ptr<Stmt> Parser::ParseStmt()
   switch (tk.GetKind()) {
     case Token::Kind::RETURN: return ParseReturnStmt();
     case Token::Kind::WHILE: return ParseWhileStmt();
+    //added for if
+    case Token::Kind::IF: return ParseIfStmt();
     case Token::Kind::LBRACE: return ParseBlockStmt();
     default: return std::make_shared<ExprStmt>(ParseExpr());
   }
@@ -144,12 +146,38 @@ std::shared_ptr<Expr> Parser::ParseTermExpr()
           std::make_shared<RefExpr>(ident)
       );
     }
+     case Token::Kind::INT: {
+      uint64_t aux = tk.GetInt();
+      lexer_.Next();
+
+      return std::static_pointer_cast<Expr>(
+        std::make_shared<IntegerExpr>(aux)
+      );
+    }
     default: {
       std::ostringstream os;
       os << "unexpected " << tk << ", expecting term";
       Error(tk.GetLocation(), os.str());
     }
   }
+}
+
+// for if statement---------------------------------------------------------------------------
+std::shared_ptr<IfStmt> Parser::ParseIfStmt() {
+  Check(Token::Kind::IF);
+
+  Expect(Token::Kind::LPAREN);
+  lexer_.Next();
+  auto condition = ParseExpr();
+  Check(Token::Kind::RPAREN);
+  lexer_.Next();
+  auto firstStmt = ParseStmt();
+  std::shared_ptr<Stmt> elseStmt = nullptr;
+  if (Current().Is(Token::Kind::ELSE)) {
+    lexer_.Next();
+    elseStmt = ParseStmt();
+  }
+  return std::make_shared<IfStmt>(std::move(condition), std::move(firstStmt), std::move(elseStmt));
 }
 
 // -----------------------------------------------------------------------------
@@ -174,12 +202,46 @@ std::shared_ptr<Expr> Parser::ParseCallExpr()
 // -----------------------------------------------------------------------------
 std::shared_ptr<Expr> Parser::ParseAddSubExpr()
 {
+  std::shared_ptr<Expr> term = ParseMultiplyDivideModExpr();
+  while (Current().Is(Token::Kind::PLUS) || Current().Is(Token::Kind::MINUS)) {
+    auto token=Current();
+    lexer_.Next();
+    auto rhs = ParseMultiplyDivideModExpr();
+    term = std::make_shared<BinaryExpr>(token.Is(Token::Kind::PLUS) ? BinaryExpr::Kind::ADD : BinaryExpr::Kind::SUBTRACT, term, rhs);
+  }
+
+  return term;
+}
+
+
+
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<Expr> Parser::ParseMultiplyDivideModExpr()
+{
   std::shared_ptr<Expr> term = ParseCallExpr();
-  while (Current().Is(Token::Kind::PLUS)) {
+  while (Current().Is(Token::Kind::MULTIPLY) || Current().Is(Token::Kind::DIVIDE) || Current().Is(Token::Kind::MODULO)) {
+    auto token=Current();
+        lexer_.Next();
+    auto rhs = ParseCallExpr();
+    term = std::make_shared<BinaryExpr>(token.Is(Token::Kind::MULTIPLY) ? BinaryExpr::Kind::MULTIPLY : (token.Is(Token::Kind::DIVIDE) ? BinaryExpr::Kind::DIVIDE : BinaryExpr::Kind::MODULO), term, rhs);
+  }
+  
+  return term;
+}
+
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<Expr> Parser::ParseEqualExpr()
+{
+  std::shared_ptr<Expr> term = ParseAddSubExpr();
+  while (Current().Is(Token::Kind::EQUALS)) {
+  
     lexer_.Next();
     auto rhs = ParseCallExpr();
-    term = std::make_shared<BinaryExpr>(BinaryExpr::Kind::ADD, term, rhs);
+    term = std::make_shared<BinaryExpr>(BinaryExpr::Kind::EQUAL, term, rhs);
   }
+  
   return term;
 }
 
