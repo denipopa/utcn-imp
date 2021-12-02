@@ -92,7 +92,7 @@ Token Token::String(const Location &l, const std::string &str)
   return tk;
 }
 
-// ----------------------------------------------------------------------------- // MODIFIED
+// ----------------------- // MODIFIED
 Token Token::Int(const Location &l, const uint64_t integerValue)
 {
   Token tk(l, Kind::INT);
@@ -130,7 +130,7 @@ std::ostream &operator<<(std::ostream &os, const Token::Kind kind)
     case Token::Kind::FUNC: return os << "func";
     case Token::Kind::RETURN: return os << "return";
     case Token::Kind::WHILE: return os << "while";
-     case Token::Kind::IF: return os << "if";
+    case Token::Kind::IF: return os << "if";
     case Token::Kind::ELSE: return os << "else";
     case Token::Kind::LPAREN: return os << "(";
     case Token::Kind::RPAREN: return os << ")";
@@ -142,6 +142,11 @@ std::ostream &operator<<(std::ostream &os, const Token::Kind kind)
     case Token::Kind::COMMA: return os << ",";
     case Token::Kind::PLUS: return os << "+";
     case Token::Kind::MINUS: return os << "-";
+    //added
+    case Token::Kind::MULTIPLY: return os << "*";
+    case Token::Kind::DIVIDE: return os << "/";
+    case Token::Kind::MODULO: return os << "%";
+    case Token::Kind::EQUALS: return os << "==";
     case Token::Kind::END: return os << "END";
     case Token::Kind::INT: return os << "INT";
     case Token::Kind::STRING: return os << "STRING";
@@ -216,14 +221,7 @@ const Token &Lexer::Next()
         return NextChar(), tk_ = Token::Equal(loc);
       }
     }
-    // case '=': {
-    //   NextChar();
-    //   if (chr_ == '=') {
-    //     NextChar();
-    //     return tk_ = Token::Equals(loc);
-    //   }
-    //   return tk_ = Token::Equal(loc);
-    // }
+
     case '*':return NextChar(), tk_ = Token::Multiply(loc);
     case '/':return NextChar(), tk_ = Token::Divide(loc);
     case '%':return NextChar(), tk_ = Token::Modulo(loc);

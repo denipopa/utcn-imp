@@ -85,8 +85,7 @@ void Interp::Run()
        case Opcode::EQUAL: {
         auto rhs = PopInt();
         auto lhs = PopInt();
-        // Push(rhs == lhs);
-      int64_t val = lhs == rhs ? 1 : 0;
+        uint64_t val = lhs == rhs ? 1 : 0;
         Push(val);
         continue;
       }
