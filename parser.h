@@ -42,7 +42,7 @@ private:
   /// Parse an if statement. 
   std::shared_ptr<IfStmt> ParseIfStmt();
   /// Parse a single expression.
-  std::shared_ptr<Expr> ParseExpr() { return ParseEqualExpr(); }
+  std::shared_ptr<Expr> ParseExpr() { return ParseEqualExpr(); } // because equal is the first, high priority
   /// Parse an expression which has no operators.
   std::shared_ptr<Expr> ParseTermExpr();
   /// Parse a call expression.

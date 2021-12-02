@@ -114,14 +114,14 @@ private:
   void LowerBlockStmt(const Scope &scope, const BlockStmt &blockStmt);
   /// Lowers a while statement.
   void LowerWhileStmt(const Scope &scope, const WhileStmt &whileStmt);
-  /// Lowers a if statement
+  /// Lowers a if statement // for if lab2
   void LowerIfStmt(const Scope &scope, const IfStmt &ifStmt);
   /// Lowers a return statement.
   void LowerReturnStmt(const Scope &scope, const ReturnStmt &returnStmt);
   /// Lowers a standalone expression statement.
   void LowerExprStmt(const Scope &scope, const ExprStmt &exprStmt);
 
-  /// Modified
+  /// Modified for lab 1
   void LowerInteger(const IntegerExpr &expr);
 
   /// Lowers a single expression.
@@ -150,7 +150,7 @@ private:
   void EmitPushProto(RuntimeFn fn);
   /// Push the nth value from the stack to the top.
 
-  /// Modified
+  /// Modified for lab 1
   void EmitPushInt(uint64_t index);
 
   void EmitPeek(uint32_t index);
@@ -160,6 +160,7 @@ private:
   void EmitAdd();
   /// Emit an subtract opcode.
   void EmitSubtract();
+  //for lab 2
     /// Emit an multiply opcode.
   void EmitMultiply();
 

@@ -56,7 +56,7 @@ void Interp::Run()
       case Opcode::ADD: {
         auto rhs = PopInt();
         auto lhs = PopInt();
-        /// MODIFIED
+        /// MODIFIED for lab 1
         if(typeid(lhs) != typeid(int64_t) || typeid(rhs) != typeid(int64_t))
         {
           throw RuntimeError("Invalid");

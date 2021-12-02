@@ -22,7 +22,7 @@ public:
     BLOCK,
     WHILE,
     IF,
-    EXPR,
+    EXPR,//not yet impl
     RETURN
   };
 
@@ -141,7 +141,7 @@ private:
   ArgList args_;
 };
 
-//MODIFIED
+//MODIFIED for lab 1
 class IntegerExpr : public Expr {
 public:
   IntegerExpr(uint64_t integerValue)

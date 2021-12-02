@@ -376,13 +376,14 @@ void Codegen::EmitReturn()
   Emit<unsigned>(func_ ? func_->arg_size() : 0);
 }
 
-// ----------------------------------------------------------------------------- // MODIFIED
+// -------------------------------------- // MODIFIED for lab 1
 void Codegen::EmitPushInt(uint64_t index)
 {
   depth_ += 1;
   Emit<Opcode>(Opcode::PUSH_INT);
   Emit<int64_t>(index);
 }
+
 
 // -----------------------------------------------------------------------------
 void Codegen::EmitAdd()
@@ -400,6 +401,7 @@ void Codegen::EmitSubtract()
   Emit<Opcode>(Opcode::SUBTRACT);
 }
 // -----------------------------------------------------------------------------
+//added lab 2
 void Codegen::EmitMultiply()
 {
   assert(depth_ > 0 && "no elements on stack");

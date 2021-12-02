@@ -14,7 +14,7 @@ std::ostream &operator<<(std::ostream &os, Opcode op)
     case Opcode::POP:        return os << "POP";
     case Opcode::CALL:       return os << "CALL";
     case Opcode::ADD:        return os << "ADD";
-    //added
+    //added for lab 2
     case Opcode::SUBTRACT:        return os << "SUBTRACT";
     case Opcode::MULTIPLY:        return os << "MULTIPLY";
     case Opcode::DIVIDE:        return os << "DIVIDE";

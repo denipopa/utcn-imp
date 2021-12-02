@@ -86,7 +86,7 @@ public:
     return v.Val.Addr;
   }
 
-  /// Look at the integer on top of the stack.
+  /// Look at the integer on top of the stack. for lab1
   int64_t PeekInt()
   {
     auto v = *stack_.rbegin();

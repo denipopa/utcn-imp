@@ -177,7 +177,7 @@ std::shared_ptr<IfStmt> Parser::ParseIfStmt() {
     lexer_.Next();
     elseStmt = ParseStmt();
   }
-  return std::make_shared<IfStmt>(condition, firstStmt, elseStmt);
+  return std::make_shared<IfStmt>(condition, firstStmt, elseStmt);//worked also with std::move
 }
 
 // -----------------------------------------------------------------------------

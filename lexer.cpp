@@ -253,6 +253,7 @@ const Token &Lexer::Next()
         if (word == "else") return tk_ = Token::Else(loc);
         return tk_ = Token::Ident(loc, word);
       }
+      // for lab 1 for numbers
       if(chr_ >= '0' && chr_ <= '9')
       {
         uint64_t digit = 0;
