@@ -116,6 +116,8 @@ private:
   void LowerWhileStmt(const Scope &scope, const WhileStmt &whileStmt);
   /// Lowers a if statement // for if lab2
   void LowerIfStmt(const Scope &scope, const IfStmt &ifStmt);
+  /// Lowers a let statement // for let lab 3
+  void LowerLetStmt(const Scope &scope, const LetStmt &letStmt);
   /// Lowers a return statement.
   void LowerReturnStmt(const Scope &scope, const ReturnStmt &returnStmt);
   /// Lowers a standalone expression statement.

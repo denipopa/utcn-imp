@@ -117,6 +117,9 @@ void Codegen::LowerStmt(const Scope &scope, const Stmt &stmt)
     case Stmt::Kind::IF: {
       return LowerIfStmt(scope, static_cast<const IfStmt &>(stmt));
     }
+     case Stmt::Kind::LET: {
+      return LowerLetStmt(scope, static_cast<const LetStmt &>(stmt));//lab3 let
+    }
     case Stmt::Kind::EXPR: {
       return LowerExprStmt(scope, static_cast<const ExprStmt &>(stmt));
     }
@@ -170,6 +173,13 @@ void Codegen::LowerIfStmt(const Scope &scope, const IfStmt &ifStmt) {
 
   EmitLabel(end);
 }
+
+//lab3 let statement-----------------------------------------------------------------------
+void Codegen::LowerLetStmt(const Scope &scope, const LetStmt &letStmt) {
+//TODO
+ LowerExpr(scope,letStmt.GetInitVal());
+}
+
 // -----------------------------------------------------------------------------
 void Codegen::LowerReturnStmt(const Scope &scope, const ReturnStmt &retStmt)
 {

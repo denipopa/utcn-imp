@@ -22,7 +22,8 @@ public:
     BLOCK,
     WHILE,
     IF,
-    EXPR,//not yet impl
+    LET,//lab3
+    EXPR,
     RETURN
   };
 
@@ -196,6 +197,25 @@ private:
   std::shared_ptr<Expr> expr_;
 };
 
+
+//to impl!!
+class LetStmt final : public Stmt {
+  public:
+    LetStmt(std:shared_ptr<Expr> expr)
+    : Stmt(Kind:LET)
+    , expr_(expr)
+    ,name_(name),
+
+    {
+
+    }
+    const Expr &GetExpr() const { return *expr_;}
+    const std::string &GetName() const {return name;}
+
+  private:
+    std::shared_ptr<Expr> expr_;
+    const std::string name;
+}
 /**
  * Return statement returning an expression.
  */

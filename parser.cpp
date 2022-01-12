@@ -90,6 +90,8 @@ std::shared_ptr<Stmt> Parser::ParseStmt()
     case Token::Kind::WHILE: return ParseWhileStmt();
     //added for if
     case Token::Kind::IF: return ParseIfStmt();
+    //added for let
+    case Token::Kind::LET: return ParseLetStmt();
     case Token::Kind::LBRACE: return ParseBlockStmt();
     default: return std::make_shared<ExprStmt>(ParseExpr());
   }
@@ -134,6 +136,27 @@ std::shared_ptr<WhileStmt> Parser::ParseWhileStmt()
   return std::make_shared<WhileStmt>(cond, stmt);
 }
 
+// let lab3-------
+std::shared_ptr<LetStmt> Parser::ParseLetStmt()
+{
+  Check(Token::Kind::LET);
+  lexer_.Next()
+  Check(Token::Kind::IDENT);
+  auto token=Current();
+  std::string ident(token.GetIdent());
+  Expect(Token::Kind::COLON);
+
+  Expect(Token::Kind::IDENT);
+
+   std::string type=(token.GetIdent());
+
+  Expect(Token::Kind::EQUAL);
+  lexer_.Next();
+  auto expr=ParseExpr();
+ 
+  return std::make_shared<LetStmt>(ident,type,expr);
+
+}
 // -----------------------------------------------------------------------------
 std::shared_ptr<Expr> Parser::ParseTermExpr()
 {
